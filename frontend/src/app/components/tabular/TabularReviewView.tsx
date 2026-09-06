@@ -335,6 +335,18 @@ export function TRView({ reviewId, projectId }: Props) {
 
     const requireStructure = requireContent;
 
+    /**
+     * Adding columns is `content.edit` server-side, so the refusal belongs at
+     * the button, not at the submit: a viewer used to open the modal, name a
+     * column, write a prompt and pick a format before "Editors only" arrived.
+     * `handleAddColumn` keeps its own gate as the backstop for any other way
+     * in.
+     */
+    function openAddColumns() {
+        if (!requireStructure("add columns")) return;
+        setAddColOpen(true);
+    }
+
     // Who to ask when an action is refused. A review inside a project inherits
     // that project's admin contacts; a standalone review's contact is its
     // creator, which only the people roster knows — so it is fetched the first
@@ -1531,7 +1543,7 @@ export function TRView({ reviewId, projectId }: Props) {
                                     )}
                                     {!loading && (
                                         <TabPillButtonUI
-                                            onClick={() => setAddColOpen(true)}
+                                            onClick={openAddColumns}
                                             disabled={
                                                 savingColumn ||
                                                 savingColumnsConfig
@@ -1616,7 +1628,7 @@ export function TRView({ reviewId, projectId }: Props) {
                                 }}
                                 onUpdateColumn={handleUpdateColumn}
                                 onDeleteColumn={handleDeleteColumn}
-                                onAddColumn={() => setAddColOpen(true)}
+                                onAddColumn={openAddColumns}
                                 onAddDocuments={() => {
                                     if (
                                         !requireStructure(
