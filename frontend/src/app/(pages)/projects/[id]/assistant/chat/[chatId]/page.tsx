@@ -379,7 +379,6 @@ export default function ProjectAssistantChatPage({ params }: Props) {
     const adoptCreatedChat = useCallback(
         (chatId: string) => {
             createdChatIdRef.current = chatId;
-            setChatOwnerId(user?.id ?? null);
             setActiveChatId(chatId);
             window.history.pushState(
                 null,
@@ -387,7 +386,7 @@ export default function ProjectAssistantChatPage({ params }: Props) {
                 `/projects/${projectId}/assistant/chat/${chatId}`,
             );
         },
-        [projectId, user?.id],
+        [projectId],
     );
     const {
         messages,
@@ -603,7 +602,6 @@ export default function ProjectAssistantChatPage({ params }: Props) {
         let cancelled = false;
         setChatLoaded(false);
         setChatTitle(null);
-        setChatOwnerId(null);
         setChatModel(undefined);
         setChatReasoningLevel(undefined);
         setMessages([]);
