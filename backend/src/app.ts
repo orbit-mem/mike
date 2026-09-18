@@ -308,6 +308,7 @@ app.use("/audit", auditRouter);
 app.use("/upload-sessions", uploadSessionsRouter);
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
+app.get("/", (_req, res) => res.json({ ok: true, message: "Mike API is running", appVersion: "1.0.0" }));
 
 // The Ed25519 public key this deployment signs project export manifests with,
 // or null when no key is configured. Deliberately open: whoever checks a

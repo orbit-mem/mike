@@ -2,6 +2,11 @@
     "name": "mike",
     "private": true,
     "scripts": {
+        "dev": "node scripts/dev.js",
+        "prod": "docker compose -f docker-compose.prod.yml up --build -d && node scripts/check-prod.js",
+        "prod:down": "docker compose -f docker-compose.prod.yml down",
+        "prod:check": "node scripts/check-prod.js",
+        "setup": "node scripts/init-env.js",
         "test:e2e": "playwright test",
         "test:e2e:local": "bash scripts/e2e-local-stack.sh",
         "test:e2e:headed": "playwright test --headed",

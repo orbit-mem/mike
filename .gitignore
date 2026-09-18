@@ -4,11 +4,13 @@ dist
 out
 build
 .open-next
+.kilo
 
 .env
 .env.*
 !.env.example
 !.env.local.example
+!.env.production.example
 
 *.log
 *.raw-llm-stream.json
