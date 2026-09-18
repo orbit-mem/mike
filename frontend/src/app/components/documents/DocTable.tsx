@@ -31,6 +31,7 @@ import {
     type UploadOutcome,
     type UploadProgress,
     type UploadProgressStatus,
+    MikeApiError,
 } from "@/app/lib/mikeApi";
 import { runUserExport } from "@/app/lib/asyncExport";
 import type {
@@ -100,7 +101,7 @@ import { DocumentSidePanel } from "@/app/components/shared/DocumentSidePanel";
 import { TableLoadMoreRow } from "@/app/components/shared/TableLoadMoreRow";
 import { LibrarySkeuoIcon } from "@/app/components/shared/AppSidebarSkeuoIcons";
 import { EmptyState } from "@/app/components/ui/empty-state";
-import { PillButton } from "@/app/components/ui/pill-button";
+import { PillButtonUI } from "@/shared/ui/PillButtonUI";
 import {
     LIQUID_GLASS_SELECTED_CLASS,
     LIQUID_GLASS_GROUP_HOVER_CLASS,
@@ -1328,6 +1329,17 @@ export function DocTable({
         } catch (e) {
             console.error("renameDocument failed", e);
             setDocuments((prev) => (previous ? prev.map((d) => (d.id === docId ? previous : d)) : prev));
+            // The backend refuses to rename a document that has no file yet
+            // (nothing to carry the name); say so instead of snapping back
+            // silently. Anything else gets the generic fallback.
+            setCollectionActionWarning(
+                e instanceof MikeApiError && e.status === 404
+                    ? "This document has no file yet, so it can't be renamed."
+                    : userFacingApiError(
+                          e,
+                          "This document could not be renamed. Please try again.",
+                      ),
+            );
         }
     }
 
@@ -4058,7 +4070,7 @@ export function DocTable({
                                                 title={emptyStateTitle}
                                                 description="Upload documents or drop files and folders here"
                                                 action={
-                                                    <PillButton
+                                                    <PillButtonUI
                                                         tone="black"
                                                         size="sm"
                                                         onClick={(event) => {
@@ -4067,7 +4079,7 @@ export function DocTable({
                                                         }}
                                                     >
                                                         Upload
-                                                    </PillButton>
+                                                    </PillButtonUI>
                                                 }
                                             />
                                         </TableEmptyState>

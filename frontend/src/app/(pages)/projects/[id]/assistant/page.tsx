@@ -15,7 +15,7 @@ import { useAuth } from "@/app/contexts/AuthContext";
 import { can, roleFrom } from "@/app/lib/permissions";
 import { userFacingApiError } from "@/app/lib/userFacingError";
 import { WarningPopup } from "@/app/components/popups/WarningPopup";
-import { TabPillButton } from "@/app/components/ui/tab-pill-button";
+import { TabPillButtonUI } from "@/shared/ui/TabPillButtonUI";
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -36,12 +36,12 @@ function SelectedChatActions({
 
     return (
         <div className="relative">
-            <TabPillButton
+            <TabPillButtonUI
                 onClick={() => onOpenChange(!open)}
             >
                 Actions
                 <ChevronDown className="h-3.5 w-3.5" />
-            </TabPillButton>
+            </TabPillButtonUI>
             {open && (
                 <div className="absolute right-0 top-full z-[120] mt-1 w-36 overflow-hidden rounded-lg border border-white/60 bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_12px_32px_rgba(15,23,42,0.14)] backdrop-blur-xl">
                     <button
@@ -94,12 +94,6 @@ export default function ProjectAssistantPage({ params }: Props) {
     const filteredChats = q
         ? visibleChats.filter((c) => (c.title ?? "").toLowerCase().includes(q))
         : visibleChats;
-    const allChatsSelected =
-        filteredChats.length > 0 &&
-        filteredChats.every((c) => selectedChatIds.includes(c.id));
-    const someChatsSelected =
-        !allChatsSelected &&
-        filteredChats.some((c) => selectedChatIds.includes(c.id));
 
     async function submitChatRename(chatId: string) {
         const trimmed = renameChatValue.trim();
@@ -211,8 +205,6 @@ export default function ProjectAssistantPage({ params }: Props) {
                 chats={visibleChats}
                 filteredChats={filteredChats}
                 selectedChatIds={selectedChatIds}
-                allChatsSelected={allChatsSelected}
-                someChatsSelected={someChatsSelected}
                 renamingChatId={renamingChatId}
                 renameChatValue={renameChatValue}
                 currentUserId={user?.id}
